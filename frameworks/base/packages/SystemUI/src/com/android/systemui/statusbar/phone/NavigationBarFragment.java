@@ -604,7 +604,7 @@ public class NavigationBarFragment extends Fragment implements Callbacks {
     //Brightness
     private void BrightnessClick(View v) {
 	Log.i(TAG, "++++Brightness onClick+++++");
-	Intent intent = new Intent("android.intent.action.SHOW_BRIGHTNESS_DIALOG");
+	Intent intent = new Intent("com.android.intent.action.SHOW_BRIGHTNESS_DIALOG");
 	intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 	v.getContext().startActivityAsUser(intent, UserHandle.CURRENT); 
     }
@@ -612,7 +612,7 @@ public class NavigationBarFragment extends Fragment implements Callbacks {
     private boolean BrightnessTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
 	    Log.i(TAG, "++++Brightness onTouch+++++");
-	    Intent intent = new Intent("android.intent.action.SHOW_BRIGHTNESS_DIALOG");
+	    Intent intent = new Intent("com.android.intent.action.SHOW_BRIGHTNESS_DIALOG");
 	    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 	    v.getContext().startActivityAsUser(intent, UserHandle.CURRENT);
         }
