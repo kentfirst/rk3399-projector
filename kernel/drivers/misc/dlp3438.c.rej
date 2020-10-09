@@ -1,0 +1,20 @@
+--- drivers/misc/dlp3438.c
++++ drivers/misc/dlp3438.c
+@@ -368,7 +368,7 @@ static ssize_t project_brightness_show(struct device *device,
+ 	unsigned int val;
+ 
+ 	dlp3438->brightness = dlp3438_read_led(dlp3438, 0) + 1;
+-	val = dlp3438->brightness * MAX_BRIGHTNESS_LEVEL / dlp3438->max_level;
++	val = dlp3438->brightness * MAX_BRIGHTNESS_LEVEL / 1024;
+ 	if (val > MAX_BRIGHTNESS_LEVEL)
+ 		val = MAX_BRIGHTNESS_LEVEL;
+ 
+@@ -390,7 +390,7 @@ static ssize_t project_brightness_store(struct device *device,
+ 	if (val > MAX_BRIGHTNESS_LEVEL)
+ 		val = MAX_BRIGHTNESS_LEVEL;
+ 
+-	dlp3438->brightness = (val * dlp3438->max_level) / MAX_BRIGHTNESS_LEVEL - 1;
++	dlp3438->brightness = (val * 1024) / MAX_BRIGHTNESS_LEVEL - 1;
+ 	dlp3438_write_led(dlp3438, 0, dlp3438->brightness);
+ 	dev_info(dlp3438->dev, "set project brightness :%d, %d successfully\n",
+ 		 val, dlp3438->brightness);

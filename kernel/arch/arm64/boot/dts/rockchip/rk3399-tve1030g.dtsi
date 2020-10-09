@@ -126,17 +126,6 @@
 		io-channels = <&saradc 2>;
 	};
 
-//dlp_v2				////KentYu added 20200516
-	dlp_monitor1 {
-		compatible = "dlp_monitor1";
-		fandet_gpio = <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;//GPIO_ACTIVE_LOW means input
-
-		pinctrl-names = "default";
-		pinctrl-0 = <&dlp_fandet_gpio>;
-		io-channels = <&saradc 3>;
-	};
-//end
-
 	sdio_pwrseq: sdio-pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		clocks = <&rk808 1>;
@@ -814,6 +803,33 @@
 
 		status = "okay";
 	};
+
+//dlp_v2				////KentYu added 20200516
+/*
+	dlpmonitor1: dlpmonitor1@49 {
+		compatible = "ti,dlpmonitor1";
+		reg = <0x49>;
+
+		fandet_gpio = <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;//GPIO_ACTIVE_LOW means input
+		pinctrl-names = "default";
+		pinctrl-0 = <&dlp_fandet_gpio>;
+		io-channels = <&saradc 3>;
+
+		status = "okay";
+	};
+*/
+	dlpmonitor1: dlpmonitor1@49 {
+		status = "okay";
+		compatible = "tcn75";
+		reg = <0x49>;
+
+		//fandet_gpio = <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;//GPIO_ACTIVE_LOW means input
+		//pinctrl-names = "default";
+		//pinctrl-0 = <&dlp_fandet_gpio>;
+		//io-channels = <&saradc 3>;
+	};
+
+//end
 
 	gslx680: gslx680@40 {
 		compatible = "gslX680_tve";
