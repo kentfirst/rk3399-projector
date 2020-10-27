@@ -346,8 +346,14 @@ static struct attribute_group dlpmonitor1_attr_group = {
 #endif
 
 #if defined(SUPPORT_DELAY)					//20200812 KentYu support delay work
+extern int tcn75_read_temp(int *tcn75_temp);//20201026
 static void dlpmonitor1_detect_work(struct work_struct *work)
 {
+	int dlp_temp;
+	
+	tcn75_read_temp(&dlp_temp);
+	dev_info(dlpmonitor1_info->dev, "dlp temp=%d\n", dlp_temp);
+	schedule_delayed_work(&dlpmonitor1_info->delay_work, 6 * HZ);
 }
 #endif
 
@@ -389,6 +395,8 @@ static int dlpmonitor1_i2c_probe(struct i2c_client *client,
 	int ret;
 	#endif
 
+	dev_info(dlpmonitor1_info->dev, "dlpmonitor1 probe1...\n");//20201024
+
 	dlpmonitor1 = devm_kzalloc(dev, sizeof(*dlpmonitor1), GFP_KERNEL);
 	if (!dlpmonitor1)
 		return -ENOMEM;
@@ -398,6 +406,8 @@ static int dlpmonitor1_i2c_probe(struct i2c_client *client,
 	i2c_set_clientdata(client, dlpmonitor1);
 
 	dlpmonitor1_info = dlpmonitor1;
+
+	dev_info(dlpmonitor1_info->dev, "dlpmonitor1 probe2...\n");//20201024
 
 	#if defined(SUPPORT_ATTR)				//20200812 KentYu support setup menu call
 	ret = sysfs_create_group(&dev->kobj, &dlpmonitor1_attr_group);

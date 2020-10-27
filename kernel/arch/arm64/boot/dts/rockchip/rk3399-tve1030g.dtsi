@@ -818,17 +818,12 @@
 		status = "okay";
 	};
 */
-	dlpmonitor1: dlpmonitor1@49 {
-		status = "okay";
+	tcn75: tcn75@49 {
 		compatible = "tcn75";
 		reg = <0x49>;
 
-		//fandet_gpio = <&gpio4 RK_PD5 GPIO_ACTIVE_LOW>;//GPIO_ACTIVE_LOW means input
-		//pinctrl-names = "default";
-		//pinctrl-0 = <&dlp_fandet_gpio>;
-		//io-channels = <&saradc 3>;
+		status = "okay";
 	};
-
 //end
 
 	gslx680: gslx680@40 {

@@ -55,6 +55,11 @@ static const struct regmap_config dlp3438_regmap_config = {
 
 struct dlp3438 *dlp3438_info;
 
+#if 1//20201027 KentYu for reporting temp per 5 second
+static struct delayed_work my_queue_work;
+static struct workqueue_struct *my_workqueue = NULL;
+#endif
+
 /*
 void vI2cDeinitDlp3438(void)
 {
@@ -497,7 +502,23 @@ static void dlp3438_detect_work(struct work_struct *work)
 	project_set_mode(dlp3438);
 }
 
+#if 1//20201027 KentYu for reporting temp per 5 second
+extern int tcn75_read_temp(int *tcn75_temp);
+void work_func(struct work_struct *work)
+{
+	int dlp_temp;
+	
+	tcn75_read_temp(&dlp_temp);
+	dev_info(dlp3438_info->dev, "dlp temp=%d\n", dlp_temp);
+	if(dlp_temp > 50000)
+	{
+	        if (dlp3438_info->project_on_gpio)
+	                gpiod_set_value(dlp3438_info->project_on_gpio, 0);//close projector
+	}
 
+	queue_delayed_work(my_workqueue, &my_queue_work, 2000);
+}
+#endif
 
 static int dlp3438_early_suspend(struct dlp3438_suspend *ds) {
         struct dlp3438 *dlp3438 = container_of(ds, struct dlp3438, ds);
@@ -704,6 +725,12 @@ static int dlp3438_i2c_probe(struct i2c_client *client,
 	dlp3438->max_level = 0;//20200724 by yb
 	INIT_DELAYED_WORK(&dlp3438->delay_work, dlp3438_detect_work);
 	schedule_delayed_work(&dlp3438->delay_work, 6 * HZ);
+
+	#if 1//20201027 KentYu for reporting temp per 5 second
+	my_workqueue= create_workqueue("5s");
+	INIT_DELAYED_WORK(&my_queue_work,work_func);
+	queue_delayed_work(my_workqueue, &my_queue_work, 5000);
+	#endif
 
 	{
 	phys_addr_t write_addr_bak = 0xff76037c;
