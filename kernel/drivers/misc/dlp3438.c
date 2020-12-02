@@ -492,9 +492,20 @@ static void dlp3438_detect_work(struct work_struct *work)
 	if (dlp3438->led_power_gpio)
 		gpiod_set_value(dlp3438->led_power_gpio, 1); 
 
+	//project on
+	//projector on doesn't influece projector status!!! so can be put up!!!
+	if(bResume)//20201030 KentYu for solving power on flash issue
+	{
+		bResume = false;
+		dev_err(dev, "dlp3438 project on\n");
+		if (dlp3438->project_on_gpio)
+			gpiod_set_value(dlp3438->project_on_gpio, 1);
+		msleep(170);
+	}
+
 	//20201030 KentYu this delay must be set for I2C work correctly!!!!!
 	//500->flash, 200->invert, 310~330->ok
-	msleep(330);
+	msleep(350);
 
 	if (!dlp3438->max_level) {
 		dlp3438->max_level = 1023;//jjj1024;  // max brightness level
@@ -506,16 +517,6 @@ static void dlp3438_detect_work(struct work_struct *work)
 	ret = regmap_write(dlp3438->regmap, INPUT_SOURCE, 0x00);//20200531: select inputsource-external video
 	dev_err(dev, "dlp3438 write input source = %d\n", ret);
 	project_set_mode(dlp3438);
-
-	//project on
-	//projector on doesn't influete projector status!!! so can be put up!!!
-	if(bResume)//20201030 KentYu for solving power on flash issue
-	{
-		bResume = false;
-		dev_err(dev, "dlp3438 led on\n");
-		if (dlp3438->project_on_gpio)
-			gpiod_set_value(dlp3438->project_on_gpio, 1);
-	}
 
 }
 
