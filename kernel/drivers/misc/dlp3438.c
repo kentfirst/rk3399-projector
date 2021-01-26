@@ -491,7 +491,9 @@ static void dlp3438_detect_work(struct work_struct *work)
 	//projector led on will reset projector settings!!! so need to reinit.
 	if (dlp3438->led_power_gpio)
 		gpiod_set_value(dlp3438->led_power_gpio, 1); 
+	msleep(20);
 
+	#if 1
 	//project on
 	//projector on doesn't influece projector status!!! so can be put up!!!
 	if(bResume)//20201030 KentYu for solving power on flash issue
@@ -502,10 +504,12 @@ static void dlp3438_detect_work(struct work_struct *work)
 			gpiod_set_value(dlp3438->project_on_gpio, 1);
 		msleep(170);
 	}
+	#endif
 
 	//20201030 KentYu this delay must be set for I2C work correctly!!!!!
 	//500->flash, 200->invert, 310~330->ok
-	msleep(350);
+	msleep(350);//flash when longer than 350!!!
+	//msleep(850);//flash when longer than 350!!!
 
 	if (!dlp3438->max_level) {
 		dlp3438->max_level = 1023;//jjj1024;  // max brightness level
@@ -518,6 +522,18 @@ static void dlp3438_detect_work(struct work_struct *work)
 	dev_err(dev, "dlp3438 write input source = %d\n", ret);
 	project_set_mode(dlp3438);
 
+	#if 0
+	//project on
+	//projector on doesn't influece projector status!!! so can be put up!!!
+	if(bResume)//20201030 KentYu for solving power on flash issue
+	{
+		bResume = false;
+		dev_err(dev, "dlp3438 project on\n");
+		if (dlp3438->project_on_gpio)
+			gpiod_set_value(dlp3438->project_on_gpio, 1);
+		msleep(170);
+	}
+	#endif
 }
 
 #if 1//20201027 KentYu for reporting temp per 5 second
